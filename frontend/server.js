@@ -297,12 +297,19 @@ app.get("/api/task", async (req, res) => {
 
   try {
     const result = await db.query(`
-      SELECT id, task_text, reward
-      FROM typing_tasks
-      WHERE active = TRUE
-      ORDER BY id
+      SELECT t.id, t.task_text, t.reward
+      FROM typing_tasks t
+      WHERE t.active = TRUE
+        AND NOT EXISTS (
+          SELECT 1
+          FROM completed_tasks c
+          WHERE c.user_id = $1
+            AND c.task_id = t.id
+            AND c.completed_at::date = CURRENT_DATE
+        )
+      ORDER BY t.id
       LIMIT 1
-    `);
+    `, [user.id]);
 
     const task = result.rows[0];
 
