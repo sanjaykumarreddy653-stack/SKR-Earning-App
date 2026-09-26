@@ -458,7 +458,8 @@ app.post("/api/task/complete", async (req, res) => {
     console.error("Typing task completion error:", error);
 
     res.status(500).json({
-      error: "Unable to complete the typing task."
+      error: "Unable to complete the typing task.",
+      detail: error.message
     });
   }
 });
