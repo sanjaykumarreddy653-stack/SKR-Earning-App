@@ -329,11 +329,15 @@ async function loadWithdrawals() {
         <span>Status: <strong>${
         w.status === "pending"
           ? "Pending"
-          : w.status === "paid"
-            ? "Paid"
-            : w.status === "rejected"
-              ? "Rejected"
-              : escapeHtml(w.status)
+          : w.status === "processing"
+            ? "Processing"
+            : w.status === "completed"
+              ? "Completed"
+              : w.status === "paid"
+                ? "Paid"
+                : w.status === "rejected"
+                  ? "Rejected"
+                  : escapeHtml(w.status)
       }</strong></span>
         <br>
         <small style="color:#68758a">
