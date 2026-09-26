@@ -1,0 +1,43 @@
+
+.env
+*.db
+node_modules/
+
+# Build/cache files
+**/.gradle/
+**/build/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Local Android configuration
+**/local.properties
+
+# Environment/secrets
+.env
+.env.*
+!.env.example
+
+# Project backup/temp files
+*.backup
+*.bak
+*.before-*
+
+# All backup/history files
+**/*.backup
+**/*.bak
+**/*.before-*
+**/*~ 
+
+# All backup/history files
+**/*.backup
+**/*.bak
+**/*.before-*
+**/*~ 
+
+**/*backup*
+**/*.backup
+**/*.bak
+**/*.before-*
+**/*~

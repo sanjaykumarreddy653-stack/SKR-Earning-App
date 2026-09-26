@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SKR Admin</title>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #080b12;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #263247;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    input, button {
+      padding: 12px;
+      margin: 5px 0;
+      border-radius: 8px;
+      border: 1px solid #303b4f;
+    }
+
+    input {
+      background: #080b12;
+      color: white;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .pay {
+      background: #173d2b;
+      color: white;
+    }
+
+    .reject {
+      background: #4a2020;
+      color: white;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 7px;
+      font-weight: bold;
+    }
+
+    .pending { background:#5a4300; color:#ffd966; }
+    .processing { background:#123b5c; color:#69c7ff; }
+    .paid { background:#173d2b; color:#72e6a1; }
+    .rejected { background:#4a2020; color:#ff8c8c; }
+  </style>
+</head>
+
+<body>
+
+<h1>SKR Earning App — Admin</h1>
+
+<div class="card">
+  <h2>Admin Authentication</h2>
+
+  <input
+    id="adminKey"
+    type="password"
+    placeholder="Admin key"
+  >
+
+  <button onclick="loadWithdrawals()">
+    Load Withdrawals
+  </button>
+
+  <button onclick="loadWithdrawals()">
+    🔄 Refresh
+  </button>
+</div>
+
+<div class="card" id="summary">
+  <strong>Admin Summary</strong>
+  <p id="summaryText">Load withdrawals to see summary.</p>
+</div>
+
+<div id="withdrawals"></div>
+
+<script>
+async function loadWithdrawals() {
+  const key = document.querySelector("#adminKey").value;
+
+  const response = await fetch("/api/withdrawals", {
+    headers: {
+      "x-admin-key": key
+    }
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.error || "Unauthorized");
+    return;
+  }
+
+  const container = document.querySelector("#withdrawals");
+
+  const pending = data.withdrawals.filter(
+    w => w.status === "pending"
+  );
+
+  const processing = data.withdrawals.filter(
+    w => w.status === "processing"
+  );
+
+  const pendingAmount = pending.reduce(
+    (sum, w) => sum + Number(w.amount),
+    0
+  );
+
+  const processingAmount = processing.reduce(
+    (sum, w) => sum + Number(w.amount),
+    0
+  );
+
+  document.querySelector("#summaryText").textContent =
+    `Pending: ${pending.length} (₹${pendingAmount.toFixed(2)}) | ` +
+    `Processing: ${processing.length} (₹${processingAmount.toFixed(2)})`;
+
+  if (!data.withdrawals.length) {
+    container.innerHTML = `
+      <div class="card">
+        No withdrawal requests.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = data.withdrawals.map(w => `
+    <div class="card">
+      <h2>Withdrawal #${w.id}</h2>
+
+      <p>User: ${escapeHtml(w.username)}</p>
+      <p>Amount: ₹${Number(w.amount).toFixed(2)}</p>
+      <p>UPI: ${escapeHtml(w.upi_id)}</p>
+      <p>Status:
+  <strong class="status ${escapeHtml(w.status)}">
+    ${escapeHtml(w.status.toUpperCase())}
+  </strong>
+</p>
+      <p>Created: ${escapeHtml(w.created_at)}</p>
+
+      ${
+        w.status === "pending" || w.status === "processing"
+        ? `
+          <button
+            onclick="updateStatus(${w.id}, 'processing')"
+          >
+            Processing
+          </button>
+
+          <button
+            class="pay"
+            onclick="updateStatus(${w.id}, 'paid')"
+          >
+            Mark Paid
+          </button>
+
+          <button
+            class="reject"
+            onclick="updateStatus(${w.id}, 'rejected')"
+          >
+            Reject
+          </button>
+        `
+        : ""
+      }
+    </div>
+  `).join("");
+}
+
+async function updateStatus(id, status) {
+  const key = document.querySelector("#adminKey").value;
+
+  const response = await fetch(
+    `/api/withdrawals/${id}/status`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": key
+      },
+      body: JSON.stringify({ status })
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.error || "Update failed.");
+    return;
+  }
+
+  await loadWithdrawals();
+}
+
+// Automatically refresh the withdrawal list every 10 seconds.
+setInterval(() => {
+  const key = document.querySelector("#adminKey").value.trim();
+
+  if (key) {
+    loadWithdrawals();
+  }
+}, 10000);
+
+setInterval(() => {
+  const key = document.querySelector("#adminKey").value.trim();
+  if (key) loadWithdrawals();
+}, 10000);
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+</script>
+
+</body>
+</html>

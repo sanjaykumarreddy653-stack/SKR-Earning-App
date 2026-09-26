@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKR Earning App</title>
+  <link rel="icon" href="data:,">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #080b12;
+      color: white;
+    }
+
+    .header {
+      padding: 24px 20px;
+      background: #101622;
+      border-bottom: 1px solid #202938;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .header p {
+      margin: 6px 0 0;
+      color: #9ca8bb;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .balance {
+      background: #151d2b;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .balance small {
+      color: #9ca8bb;
+    }
+
+    .amount {
+      font-size: 38px;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .limit {
+      color: #9ca8bb;
+    }
+
+    .card {
+      background: #111824;
+      border: 1px solid #202938;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: #202938;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .nav button {
+      font-size: 13px;
+      padding: 12px 5px;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <header class="header">
+    <h1>SKR Earning App</h1>
+    <p>Typing work platform</p>
+  </header>
+
+  <section id="auth" class="container">
+
+    <div class="card">
+      <h2>🔐 Login</h2>
+
+      <input
+        id="loginUsername"
+        placeholder="Username"
+        style="width:100%;padding:12px;margin-bottom:10px"
+      >
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+        style="width:100%;padding:12px;margin-bottom:10px"
+      >
+
+      <button class="primary" onclick="loginUser()">
+        Login
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>📝 Create Account</h2>
+
+      <input
+        id="registerUsername"
+        placeholder="Username"
+        style="width:100%;padding:12px;margin-bottom:10px"
+      >
+
+      <input
+        id="registerPassword"
+        type="password"
+        placeholder="Password (minimum 8 characters)"
+        style="width:100%;padding:12px;margin-bottom:10px"
+      >
+
+      <button class="secondary" onclick="registerUser()">
+        Register
+      </button>
+    </div>
+
+  </section>
+
+  <main id="appContent" class="container" style="display:none">
+
+    <section class="balance">
+      <small>Available Balance</small>
+      <div class="amount">₹0.00</div>
+      <div class="limit">Today's earnings: ₹0.00 / ₹50.00</div>
+    </section>
+
+    <section class="card">
+      <h2>⌨️ Typing Jobs</h2>
+      <p>Complete eligible typing tasks.</p>
+
+      <button class="primary" id="startJob">
+        Start Typing Job
+      </button>
+    </section>
+
+    <section class="card">
+      <h2>💰 Wallet</h2>
+      <p>View your current earnings.</p>
+    </section>
+
+    
+<section class="card">
+      <h2>📜 Transaction History</h2>
+      <div id="transactionHistory">
+        <p>Loading...</p>
+      </div>
+    </section>
+
+
+    <section class="card">
+      <h2>📤 UPI Withdrawal</h2>
+      <p>Minimum withdrawal: ₹10</p>
+
+      <input
+        id="withdrawAmount"
+        type="number"
+        min="10"
+        step="1"
+        placeholder="Amount (₹)"
+        style="
+          width:100%;
+          padding:12px;
+          margin:8px 0;
+          border-radius:10px;
+          border:1px solid #303b4f;
+          background:#080b12;
+          color:white;
+          font-size:16px;
+        "
+      >
+
+      <input
+        id="upiId"
+        type="text"
+        placeholder="UPI ID (example: name@bank)"
+        style="
+          width:100%;
+          padding:12px;
+          margin:8px 0;
+          border-radius:10px;
+          border:1px solid #303b4f;
+          background:#080b12;
+          color:white;
+          font-size:16px;
+        "
+      >
+
+      <button class="primary" id="withdrawButton">
+        Request Withdrawal
+      </button>
+
+      <div id="withdrawalStatus" style="margin-top:15px"></div>
+    </section>
+
+    <section class="card">
+      <h2>📋 Withdrawal History</h2>
+      <div id="withdrawalHistory">
+        <p>Loading...</p>
+      </div>
+    </section>
+
+    <button class="secondary" onclick="logoutUser()">
+      Logout
+    </button>
+
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+
+</body>
+
+</html>
