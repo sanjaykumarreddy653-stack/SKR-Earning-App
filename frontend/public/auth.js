@@ -1,5 +1,6 @@
 var API_BASE_URL =
-  window.SKR_API_BASE_URL || "";
+  window.SKR_API_BASE_URL ||
+  "https://skr-earning-app.onrender.com";
 
 async function androidFetch(path, options = {}) {
   const url = API_BASE_URL + path;
@@ -40,7 +41,7 @@ async function androidFetch(path, options = {}) {
     };
   }
 
-  const response = await fetch(path, fetchOptions);
+  const response = await fetch(API_BASE_URL + path, fetchOptions);
 
   const data = await response.json().catch(() => ({
     error: "Invalid server response."
