@@ -1,6 +1,3 @@
-var API_BASE_URL =
-  window.SKR_API_BASE_URL || "";
-
 async function androidFetch(path, options = {}) {
   const url = API_BASE_URL + path;
   if (window.AndroidAPI) {
