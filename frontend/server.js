@@ -300,15 +300,9 @@ app.get("/api/task", async (req, res) => {
       SELECT id, task_text, reward
       FROM typing_tasks
       WHERE active = TRUE
-        AND id NOT IN (
-          SELECT task_id
-          FROM completed_tasks
-          WHERE user_id = $1
-            AND completed_at::date = CURRENT_DATE
-        )
       ORDER BY id
       LIMIT 1
-    `, [user.id]);
+    `);
 
     const task = result.rows[0];
 
