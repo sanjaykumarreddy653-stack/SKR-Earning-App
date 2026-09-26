@@ -806,7 +806,7 @@ app.post("/api/withdrawals/:id/process", async (req, res) => {
       withdrawalId: withdrawal.id,
       provider: payout.provider,
       payoutId: payout.payoutId,
-      status: "processing"
+      status: payout.status
     });
 
   } catch (error) {
