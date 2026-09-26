@@ -1,4 +1,4 @@
-const API_BASE_URL =
+var API_BASE_URL =
   window.SKR_API_BASE_URL || "";
 
 async function androidFetch(path, options = {}) {
