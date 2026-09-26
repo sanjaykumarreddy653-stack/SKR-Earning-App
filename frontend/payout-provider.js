@@ -14,7 +14,7 @@ async function createPayout({ withdrawalId, amount, upiId }) {
       success: true,
       provider: "sandbox",
       payoutId,
-      status: "processing"
+      status: "completed"
     };
   }
 

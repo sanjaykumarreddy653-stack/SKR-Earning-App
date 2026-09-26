@@ -781,10 +781,17 @@ app.post("/api/withdrawals/:id/process", async (req, res) => {
     await db.query(`
       UPDATE withdrawals
       SET
-        status = 'processing',
+        status = CASE
+          WHEN $3 = 'completed' THEN 'completed'
+          ELSE 'processing'
+        END,
         provider = $1,
         provider_payout_id = $2,
-        provider_status = $3
+        provider_status = $3,
+        processed_at = CASE
+          WHEN $3 = 'completed' THEN CURRENT_TIMESTAMP
+          ELSE NULL
+        END
       WHERE id = $4
         AND provider_payout_id IS NULL
     `, [
