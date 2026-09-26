@@ -403,7 +403,7 @@ app.post("/api/task/complete", async (req, res) => {
       });
     }
 
-    const client = await db.pool.connect();
+    const client = await db.connect();
 
     try {
       await client.query("BEGIN");
@@ -613,7 +613,7 @@ app.post("/api/withdraw", async (req, res) => {
     });
   }
 
-  const client = await db.pool.connect();
+  const client = await db.connect();
 
   try {
     await client.query("BEGIN");
