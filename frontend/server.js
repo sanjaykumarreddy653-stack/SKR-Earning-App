@@ -97,7 +97,7 @@ app.post("/api/register", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
-    const client = await db.pool.connect();
+    const client = await db.connect();
 
     try {
       await client.query("BEGIN");
